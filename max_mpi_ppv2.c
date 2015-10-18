@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
 	MPI_Allreduce(&local_max, &global_max, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
 	
 	if(myid == 0) {
-		FILE *fp = fopen("output/max_mpi_ppv2.out","w");
+		FILE *fp = fopen("output/max_mpi_ppv2","w");
 		fprintf(fp, "global max : %d\n", global_max);
 		fclose(fp);
 	}

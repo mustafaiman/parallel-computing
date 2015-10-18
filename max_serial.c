@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 	}
 	fclose(fp);
 	
-	fp = fopen("output/max_serial.out", "w");
+	fp = fopen("output/max_serial", "w");
 	fprintf(fp, "%d\n", max_number);
 	fclose(fp);
 	

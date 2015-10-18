@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 				global_max = local_max;
 			}
 		}
-		fp = fopen("output/max_mpi_ppv1.out","w");
+		fp = fopen("output/max_mpi_ppv1","w");
 		fprintf(fp, "global_max : %d\n", global_max);
 		fclose(fp);
 	} else {
