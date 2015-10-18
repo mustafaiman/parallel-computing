@@ -44,9 +44,10 @@ int main(int argc, char *argv[]) {
 			if(local_max > global_max) {
 				global_max = local_max;
 			}
-			printf("local max recv : %d\n", local_max);
 		}
-			printf("global_max : %d\n", global_max);
+		fp = fopen("output/max_mpi_ppv1.out","w");
+		fprintf(fp, "global_max : %d\n", global_max);
+		fclose(fp);
 	} else {
 		MPI_Status status;
 		int numbers[MAX_NUM_SIZE/4+1];
