@@ -4,7 +4,7 @@
 #include<math.h>
 
 #define MAX_LEN 100
-int myid;
+
 int dot_product(int size, int *vec1, int *vec2) {
 	int sum = 0;
 	int i;
@@ -16,7 +16,7 @@ int dot_product(int size, int *vec1, int *vec2) {
 
 int main(int argc, char *argv[]) {
 	MPI_Init(&argc, &argv);
-	int numprocs, root_numprocs;
+	int numprocs, root_numprocs, myid;
 	MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
 	MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 	
@@ -68,7 +68,8 @@ int main(int argc, char *argv[]) {
 		for(i=0; i<group*dimension; i++)
 			mat_r2[i] = mat2[i];
 		len = dimension*group;
-	
+		free(mat1);
+		free(mat2);
 	} else {
 		MPI_Status status1, status2;
 		MPI_Recv(mat_r1, MAX_LEN, MPI_INT, 0, 0xACE5, MPI_COMM_WORLD, &status1);
@@ -88,7 +89,9 @@ int main(int argc, char *argv[]) {
 	}
 	
 	MPI_Gather(temp_c, group*group, MPI_INT, mat_result, group*group, MPI_INT, 0, MPI_COMM_WORLD);
-	
+	free(temp_c);
+	free(mat_r1);
+	free(mat_r2);
 	
 	if(myid == 0 ) {
 		for(i=0; i< dimension; i++) {
