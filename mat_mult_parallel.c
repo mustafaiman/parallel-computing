@@ -4,7 +4,7 @@
 #include<math.h>
 
 #define MAX_LEN 100
-
+int myid;
 int dot_product(int size, int *vec1, int *vec2) {
 	int sum = 0;
 	int i;
@@ -30,7 +30,7 @@ void get_row(int size, int row_number, int *mat, int *row) {
 
 int main(int argc, char *argv[]) {
 	MPI_Init(&argc, &argv);
-	int myid, numprocs, root_numprocs;
+	int numprocs, root_numprocs;
 	MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
 	MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 	
@@ -43,6 +43,8 @@ int main(int argc, char *argv[]) {
 	
 	mat_r1 = (int *)malloc(sizeof(int) * MAX_LEN);
 	mat_r2 = (int *)malloc(sizeof(int) * MAX_LEN);
+	
+	int group;
 	
 	if(myid == 0) {
 		int *mat1, *mat2;
@@ -67,13 +69,8 @@ int main(int argc, char *argv[]) {
 			fscanf(fp, " %d", &mat2[dimension * (i%dimension) + i/dimension]);
 		}
 		fclose(fp);
-	
-		for(i=0; i<dimension*dimension; i++) {
-			printf("%d ", mat2[i]);
-			if(i % dimension + 1 == dimension)
-				printf("\n");
-		}
-		int group = dimension/root_numprocs;
+
+		group = dimension/root_numprocs;
 		for(i=1; i<numprocs; i++) {
 			MPI_Send(mat1+(i/root_numprocs)*(dimension*group), dimension*group, MPI_INT, i, 0xACE5, MPI_COMM_WORLD);
 		}
@@ -95,15 +92,26 @@ int main(int argc, char *argv[]) {
 		MPI_Get_count(&status2, MPI_INT, &len);
 		
 	}
-		for(i=0; i<len; i++) {
-			printf("%d ",mat_r1[i]);
+	MPI_Bcast(&group, 1, MPI_INT, 0, MPI_COMM_WORLD);
+	
+	int *temp_c = (int *)malloc(sizeof(int) * group * group);
+	for(i = 0; i<group; i++) {
+		for(j = 0; j<group; j++) {
+			temp_c[i*group + j] = dot_product(len/group, mat_r1+i*len/group, mat_r2+j*len/group);
 		}
-		printf("    node r %d\n", myid);
-		
-		for(i=0; i<len; i++) {
-			printf("%d ",mat_r2[i]);
+	}
+	
+	MPI_Gather(temp_c, group*group, MPI_INT, mat_result, group*group, MPI_INT, 0, MPI_COMM_WORLD);
+	
+	
+	if(myid == 0 ) {
+		for(i=0; i< dimension; i++) {
+			for(j=0; j< dimension; j++) {
+				printf("%d ", mat_result[i/group * (dimension * group) + ((int)(j/group))*group*group + (i%group) * (group) + j%group]);
+			}
+			printf("\n");
 		}
-		printf("    node c %d\n", myid);
+	}
 		
 	MPI_Finalize();
 	
