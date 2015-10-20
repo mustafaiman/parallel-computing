@@ -45,8 +45,9 @@ int main(int argc, char *argv[]) {
 				global_max = local_max;
 			}
 		}
-		fp = fopen("output/max_mpi_ppv1","w");
-		fprintf(fp, "global_max : %d\n", global_max);
+		fp = fopen(argv[2],"w");
+		fprintf(fp, "max-mpi-ppv1, number of processors: %d, input file: %s\n", numprocs, argv[1]);
+		fprintf(fp, "%d\n", global_max);
 		fclose(fp);
 	} else {
 		MPI_Status status;

@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
 	free(mat_r2);
 	
 	if(myid == 0 ) {
-		FILE *fp = fopen("output/max_mpi_1d", "w");
+		FILE *fp = fopen(argv[3], "w");
 		fprintf(fp, "matmult-mpi-1d, number of processors: %d, input files: %s, %s\n", numprocs, argv[1], argv[2]);
 		for(i=0; i< dimension; i++) {
 			for(j=0; j< dimension; j++) {

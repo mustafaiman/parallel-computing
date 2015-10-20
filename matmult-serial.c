@@ -60,6 +60,7 @@ int main(int argc, char *argv[]) {
 	}
 	
 	fp = fopen(argv[3], "w");
+	fprintf(fp, "matmult-serial, input files: %s, %s\n", argv[1], argv[2]);
 	for(i=0; i<dimension*dimension; i++) {
 		fprintf(fp, "%d ", mat3[i]);
 		if(i % dimension + 1 == dimension)

@@ -43,8 +43,9 @@ int main(int argc, char *argv[]) {
 	MPI_Allreduce(&local_max, &global_max, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
 	
 	if(myid == 0) {
-		FILE *fp = fopen("output/max_mpi_ppv2","w");
-		fprintf(fp, "global max : %d\n", global_max);
+		FILE *fp = fopen(argv[2],"w");
+		fprintf(fp, "max-mpi-ppv2, number of processors: %d, input file: %s\n", numprocs, argv[1]);
+		fprintf(fp, "%d\n", global_max);
 		fclose(fp);
 	}
 
