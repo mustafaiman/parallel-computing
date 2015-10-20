@@ -94,16 +94,18 @@ int main(int argc, char *argv[]) {
 	free(mat_r2);
 	
 	if(myid == 0 ) {
+		FILE *fp = fopen("output/max_mpi_1d", "w");
+		fprintf(fp, "matmult-mpi-1d, number of processors: %d, input files: %s, %s\n", numprocs, argv[1], argv[2]);
 		for(i=0; i< dimension; i++) {
 			for(j=0; j< dimension; j++) {
-				printf("%d ", mat_result[i/group * (dimension * group) + ((int)(j/group))*group*group + (i%group) * (group) + j%group]);
+				fprintf(fp, "%d ", mat_result[i/group * (dimension * group) + ((int)(j/group))*group*group + (i%group) * (group) + j%group]);
 			}
-			printf("\n");
+			fprintf(fp, "\n");
 		}
+		fclose(fp);
 	}
 		
 	MPI_Finalize();
-	
 	
 	return 0;
 }
