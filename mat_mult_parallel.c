@@ -14,20 +14,6 @@ int dot_product(int size, int *vec1, int *vec2) {
 	return sum;
 }
 
-void get_column(int size, int column_number, int *mat, int *column) {
-	int i;
-	for(i=0; i<size; i++) {
-		column[i] = mat[column_number+i*size];
-	}
-}
-
-void get_row(int size, int row_number, int *mat, int *row) {
-	int i;
-	for(i=0; i<size; i++) {
-		row[i] = mat[i + row_number*size];
-	}
-}
-
 int main(int argc, char *argv[]) {
 	MPI_Init(&argc, &argv);
 	int numprocs, root_numprocs;
