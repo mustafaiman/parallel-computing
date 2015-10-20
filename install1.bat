@@ -1,2 +1,2 @@
-cl max_serial.c
-max_serial.exe input/max.in
+cl max-serial.c
+max-serial.exe input/max.in
