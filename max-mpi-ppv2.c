@@ -15,7 +15,10 @@ int main(int argc, char *argv[]) {
 	int recv_data[MAX_LEN];
 	int length;
 	int scatter_size;
+	
+	double t_e, t_s;
 	if(myid == 0) {
+		t_s = MPI_Wtime();
 		FILE *fp = fopen(argv[1], "r");
 		int i;
 		//read values
@@ -47,6 +50,8 @@ int main(int argc, char *argv[]) {
 		fprintf(fp, "max-mpi-ppv2, number of processors: %d, input file: %s\n", numprocs, argv[1]);
 		fprintf(fp, "%d\n", global_max);
 		fclose(fp);
+		t_e = MPI_Wtime();
+		printf("time: %lf\n", t_e-t_s);
 	}
 
 	MPI_Finalize();

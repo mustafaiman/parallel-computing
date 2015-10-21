@@ -3,7 +3,7 @@
 #include<mpi.h>
 #include<math.h>
 
-#define MAX_LEN 100
+#define MAX_LEN 128
 
 int dot_product(int size, int *vec1, int *vec2) {
 	int sum = 0;
@@ -19,6 +19,8 @@ int main(int argc, char *argv[]) {
 	int numprocs, root_numprocs, myid;
 	MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
 	MPI_Comm_rank(MPI_COMM_WORLD, &myid);
+	double t_s,t_e;
+	t_s = MPI_Wtime();
 	
 	root_numprocs = (int)sqrt((double)numprocs);
 	
@@ -72,10 +74,10 @@ int main(int argc, char *argv[]) {
 		free(mat2);
 	} else {
 		MPI_Status status1, status2;
-		MPI_Recv(mat_r1, MAX_LEN, MPI_INT, 0, 0xACE5, MPI_COMM_WORLD, &status1);
+		MPI_Recv(mat_r1, MAX_LEN*MAX_LEN, MPI_INT, 0, 0xACE5, MPI_COMM_WORLD, &status1);
 		MPI_Get_count(&status1, MPI_INT, &len);
 		
-		MPI_Recv(mat_r2, MAX_LEN, MPI_INT, 0, 0xACE5, MPI_COMM_WORLD, &status2);
+		MPI_Recv(mat_r2, MAX_LEN*MAX_LEN, MPI_INT, 0, 0xACE5, MPI_COMM_WORLD, &status2);
 		MPI_Get_count(&status2, MPI_INT, &len);
 		
 	}
@@ -103,6 +105,8 @@ int main(int argc, char *argv[]) {
 			fprintf(fp, "\n");
 		}
 		fclose(fp);
+		t_e = MPI_Wtime();
+		printf("time: %lf\n", t_e-t_s);
 	}
 		
 	MPI_Finalize();

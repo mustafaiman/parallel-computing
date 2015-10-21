@@ -11,8 +11,9 @@ int main(int argc, char *argv[]) {
 	int myid, numprocs;
 	MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
 	MPI_Comm_rank(MPI_COMM_WORLD, &myid);
-	
+	double t_s, t_e;
 	if(myid == 0) {
+		t_s = MPI_Wtime();
 		int numbers[MAX_NUM_SIZE];
 		FILE *fp = fopen(argv[1], "r");
 		
@@ -49,10 +50,12 @@ int main(int argc, char *argv[]) {
 		fprintf(fp, "max-mpi-ppv1, number of processors: %d, input file: %s\n", numprocs, argv[1]);
 		fprintf(fp, "%d\n", global_max);
 		fclose(fp);
+		t_e = MPI_Wtime();
+		printf("time: %lf\n", t_e-t_s);
 	} else {
 		MPI_Status status;
-		int numbers[MAX_NUM_SIZE/4+1];
-		MPI_Recv(numbers, MAX_NUM_SIZE/4+1, MPI_INT, 0, 0xACE5, MPI_COMM_WORLD, &status);
+		int numbers[MAX_NUM_SIZE];
+		MPI_Recv(numbers, MAX_NUM_SIZE, MPI_INT, 0, 0xACE5, MPI_COMM_WORLD, &status);
 		int len;
 		MPI_Get_count(&status, MPI_INT, &len);
 		
